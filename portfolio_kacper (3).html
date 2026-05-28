@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kacper Grzesiak — ePortfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0f;
+    --bg2: #141416;
+    --bg3: #1a1a1d;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --muted: #888580;
+    --accent: #c8ff00;
+    --accent2: #ff4d1c;
+    --safe: #4ade80;
+    --euclid: #facc15;
+    --keter: #f87171;
+    --radius: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    background: rgba(13,13,15,0.85);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: var(--accent); letter-spacing: 0.04em; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    padding: 100px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,255,0,0.07) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(200,255,0,0.3);
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    font-weight: 800;
+    line-height: 1.0;
+    color: var(--text);
+    animation: fadeUp 0.6s 0.1s ease both;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    margin-top: 20px;
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 480px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .hero-badges {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 36px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    padding: 6px 14px;
+    border-radius: 99px;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* SECTIONS */
+  section { padding: 72px 0; border-top: 1px solid var(--border); }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  p { color: #b0aba4; line-height: 1.8; }
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+  .card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* SKILLS BARS */
+  .skills { margin-top: 32px; display: flex; flex-direction: column; gap: 20px; }
+  .skill-row {}
+  .skill-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .skill-name-text { font-size: 14px; color: var(--text); }
+  .skill-level { font-size: 13px; color: var(--muted); }
+  .bar-bg { background: var(--bg3); border-radius: 99px; height: 6px; overflow: hidden; }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.2s cubic-bezier(0.16,1,0.3,1);
+  }
+  .bar-fill.animate { transform: scaleX(1); }
+
+  /* SCP CARDS */
+  .scp-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+  .scp-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex; align-items: flex-start; gap: 16px;
+    transition: border-color 0.2s;
+  }
+  .scp-card:hover { border-color: var(--border2); }
+  .scp-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bg);
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .scp-safe { background: var(--safe); }
+  .scp-euclid { background: var(--euclid); }
+  .scp-keter { background: var(--keter); }
+  .scp-info h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .scp-info p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .scp-class-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .scp-class-label.safe { color: var(--safe); }
+  .scp-class-label.euclid { color: var(--euclid); }
+  .scp-class-label.keter { color: var(--keter); }
+
+  /* QUOTE */
+  .quote-block {
+    margin-top: 32px;
+    padding: 32px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+  }
+  .quote-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .quote-author { font-size: 13px; color: var(--muted); }
+
+  /* GOALS */
+  .goals { display: flex; flex-direction: column; gap: 0; margin-top: 32px; }
+  .goal-item {
+    display: flex; gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .goal-item:last-child { border-bottom: none; }
+  .goal-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 28px;
+    margin-top: 2px;
+  }
+  .goal-item h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .goal-item p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* TRAITS */
+  .traits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .trait {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .trait-icon { font-size: 22px; margin-bottom: 10px; }
+  .trait h3 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .trait p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    text-align: center;
+  }
+  footer p { font-size: 13px; color: var(--muted); }
+  footer span { color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 560px) {
+    .hero h1 { font-size: 42px; }
+    .traits { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-logo">KG</div>
+    <div class="nav-links">
+      <a href="#pasje">Pasje</a>
+      <a href="#scp">SCP</a>
+      <a href="#umiejetnosci">Umiejętności</a>
+      <a href="#cele">Cele</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero" style="border:none; padding-top: 80px;">
+    <div class="hero-glow"></div>
+    <div class="hero-tag">ePortfolio 2026</div>
+    <h1>Kacper<br><span>Grzesiak</span></h1>
+    <p class="hero-sub">Gracz. Rysownik. Miłośnik SCP. Osoba z wyobraźnią i chęcią do rozwijania się każdego dnia.</p>
+    <div class="hero-badges">
+      <span class="badge"><span class="badge-dot"></span>League of Legends</span>
+      <span class="badge"><span class="badge-dot"></span>Rysowanie</span>
+      <span class="badge"><span class="badge-dot"></span>SCP Foundation</span>
+      <span class="badge"><span class="badge-dot"></span>Polska</span>
+    </div>
+  </section>
+
+  <section id="o-mnie" class="fade-in">
+    <div class="section-label">O mnie</div>
+    <h2>Kim jestem?</h2>
+    <p>Cześć! Jestem Kacper — osoba z trzema pasjami, które razem tworzą niepowtarzalną mieszankę. Gram w League of Legends, gdzie każda rozgrywka to test strategii i zimnej głowy. Rysuję, bo to mój sposób na wyrażanie siebie i patrzenie na świat z innej perspektywy. A w wolnych chwilach zagłębiam się w świat SCP Foundation — jednego z najbardziej kreatywnych projektów narracyjnych w internecie, pełnego tajemniczych bytów i mrocznych historii.</p>
+  </section>
+
+  <section id="pasje" class="fade-in">
+    <div class="section-label">Pasje</div>
+    <h2>Co mnie napędza</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⚔️</div>
+        <h3>League of Legends</h3>
+        <p>Strategiczna gra MOBA. Gram regularnie, rozwijając taktykę, refleks i współpracę z drużyną.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">✏️</div>
+        <h3>Rysowanie</h3>
+        <p>Rysuję postacie, światy i pomysły z głowy. To mój relaks i twórcze ujście energii.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>SCP Foundation</h3>
+        <p>Fikcyjny świat tajnych organizacji i anomalii. Czytam wpisy, poznaję lore i fascynuję się kreatywnością społeczności.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="scp" class="fade-in">
+    <div class="section-label">SCP Foundation</div>
+    <h2>Ulubione SCP</h2>
+    <p>SCP Foundation to współtworzony przez fanów projekt — encyklopedia fikcyjnych anomalii opisywanych w stylu oficjalnych raportów. To co mnie w nim fascynuje to połączenie horroru, nauki i nieograniczonej wyobraźni.</p>
+    <div class="scp-grid">
+      <div class="scp-card">
+        <div>
+          <div class="scp-id scp-keter">SCP-173</div>
+        </div>
+        <div class="scp-info">
+          <p class="scp-class-label keter">Keter</p>
+          <h3>Rzeźba</h3>
+          <p>Klasyk SCP — porusza się wyłącznie gdy nikt na nią nie patrzy. Jeden z pierwszych i najbardziej ikonicznych wpisów, który zapoczątkował całe uniwersum.</p>
+        </div>
+      </div>
+      <div class="scp-card">
+        <div>
+          <div class="scp-id scp-euclid">SCP-096</div>
+        </div>
+        <div class="scp-info">
+          <p class="scp-class-label euclid">Euclid</p>
+          <h3>Nieśmiały</h3>
+          <p>Humanoidalna istota wpada w furię gdy ktokolwiek zobaczy jej twarz — nawet na zdjęciu. Przerażający pomysł i świetne wykonanie narracyjne.</p>
+        </div>
+      </div>
+      <div class="scp-card">
+        <div>
+          <div class="scp-id scp-keter">SCP-682</div>
+        </div>
+        <div class="scp-info">
+          <p class="scp-class-label keter">Keter</p>
+          <h3>Trudna do zniszczenia gad</h3>
+          <p>Praktycznie nieśmiertelny potwór z głęboką nienawiścią do wszelkiego życia. Jeden z najpotężniejszych i najbardziej fascynujących bytów w całym kanonie.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="umiejetnosci" class="fade-in">
+    <div class="section-label">Umiejętności</div>
+    <h2>Co potrafię</h2>
+    <div class="skills">
+      <div class="skill-row">
+        <div class="skill-top"><span class="skill-name-text">Rysowanie</span><span class="skill-level">świetny</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:82%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="skill-name-text">Myślenie strategiczne</span><span class="skill-level">zaawansowany</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="skill-name-text">Kreatywność i wyobraźnia</span><span class="skill-level">wysoka</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="skill-name-text">Praca pod presją</span><span class="skill-level">dobry</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-top"><span class="skill-name-text">Komunikacja w zespole</span><span class="skill-level">dobry</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade-in">
+    <div class="section-label">Czego mnie uczą pasje</div>
+    <h2>Wartości i cechy</h2>
+    <div class="traits">
+      <div class="trait">
+        <div class="trait-icon">🧠</div>
+        <h3>Myślenie strategiczne</h3>
+        <p>LoL uczy planowania kilka kroków do przodu i błyskawicznych decyzji pod presją — jak w realnym życiu.</p>
+      </div>
+      <div class="trait">
+        <div class="trait-icon">🤝</div>
+        <h3>Praca zespołowa</h3>
+        <p>Gra w drużynie uczy słuchania innych i dążenia do wspólnego celu nawet gdy zdania są różne.</p>
+      </div>
+      <div class="trait">
+        <div class="trait-icon">👁️</div>
+        <h3>Uważność</h3>
+        <p>Rysowanie uczy patrzeć na szczegóły, które inni pomijają. Dobry rysunek zaczyna się od obserwacji.</p>
+      </div>
+      <div class="trait">
+        <div class="trait-icon">📖</div>
+        <h3>Narracja i wyobraźnia</h3>
+        <p>SCP pokazuje jak budować nastrój i historię — to inspiruje mnie w tworzeniu własnych rysunków.</p>
+      </div>
+      <div class="trait">
+        <div class="trait-icon">🔥</div>
+        <h3>Wytrwałość</h3>
+        <p>W rysowaniu i w graniu nie chodzi o bycie od razu najlepszym, ale o to żeby się nie poddawać.</p>
+      </div>
+      <div class="trait">
+        <div class="trait-icon">🎨</div>
+        <h3>Kreatywność</h3>
+        <p>Łączę pasje, które inni traktują oddzielnie — w każdym projekcie szukam nowego spojrzenia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="cele" class="fade-in">
+    <div class="section-label">Cele</div>
+    <h2>Dokąd zmierzam</h2>
+    <div class="goals">
+      <div class="goal-item">
+        <div class="goal-num">01</div>
+        <div>
+          <h3>Rozwijać styl rysowania</h3>
+          <p>Eksperymentować z różnymi technikami — od ołówka po rysunek cyfrowy. Może kiedyś narysować własne SCP.</p>
+        </div>
+      </div>
+      <div class="goal-item">
+        <div class="goal-num">02</div>
+        <div>
+          <h3>Wspinać się w rankingach LoL</h3>
+          <p>Analizuję błędy i uczę się od lepszych. Liczy się progres, nie tylko wynik końcowy.</p>
+        </div>
+      </div>
+      <div class="goal-item">
+        <div class="goal-num">03</div>
+        <div>
+          <h3>Stworzyć własny wpis SCP</h3>
+          <p>SCP Foundation to projekt tworzony przez fanów. Chciałbym kiedyś dodać do niego coś swojego — napisać lub narysować.</p>
+        </div>
+      </div>
+      <div class="goal-item">
+        <div class="goal-num">04</div>
+        <div>
+          <h3>Połączyć gaming z rysowaniem</h3>
+          <p>Interesuje mnie concept art i grafika do gier — to miejsce gdzie obydwie pasje mogłyby się spotkać.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade-in" style="padding-bottom: 80px;">
+    <div class="section-label">Ciekawostka</div>
+    <div class="quote-block">
+      <p class="quote-text">Kiedy rysuję postacie z gier albo z SCP, widzę w nich nie tylko moc — widzę historię, design i emocje ukryte w każdym detalu. Pasje, które inni traktują oddzielnie, u mnie się łączą.</p>
+      <p class="quote-author">— Kacper Grzesiak</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>ePortfolio · <span>Kacper Grzesiak</span> · 2026</p>
+</footer>
+
+<script>
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Skill bars
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.bar-fill').forEach(b => b.classList.add('animate'));
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('#umiejetnosci').forEach(el => barObserver.observe(el));
+</script>
+</body>
+</html>
